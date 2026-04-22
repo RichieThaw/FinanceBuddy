@@ -1,12 +1,12 @@
 name: Build Finance Buddy EXE
 on: 
   push:
-    branches: [ main ] # Runs every time you push code to the 'main' branch
-  workflow_dispatch: # Allows you to start the build manually
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: windows-latest # Tells GitHub to use a Windows cloud computer
+    runs-on: windows-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -16,7 +16,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: 'maven'
+          # 🔥 Fixed: Removed the 'cache: maven' line that caused the error
 
       - name: Create Output Folders
         run: |
@@ -24,15 +24,13 @@ jobs:
           mkdir input
 
       - name: Compile Java Files
-        # Assumes your .java files are in 'src/' and .jar libraries are in 'lib/'
-        run: javac -d out -cp "lib/*" src/*.java
+        # 🔥 Fixed: Pathing for your structure
+        run: javac -d out -cp "lib/*;src/*" src/*.java
 
       - name: Create Main JAR
-        # Packs your compiled classes into the final executable JAR
         run: jar --create --file=input/FinanceBuddy.jar --main-class=FinanceBuddy -C out .
 
       - name: Run jpackage
-        # The cloud runner already includes the WiX Toolset needed for .exe files
         run: |
           jpackage `
             --name "FinanceBuddy" `
@@ -46,7 +44,6 @@ jobs:
             --win-menu
             
       - name: Upload Installer
-        # Saves the final .exe file so you can download it
         uses: actions/upload-artifact@v4
         with:
           name: FinanceBuddy-Windows-Installer
