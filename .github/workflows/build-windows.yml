@@ -16,7 +16,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          # 🔥 Fixed: Removed the 'cache: maven' line that caused the error
 
       - name: Create Output Folders
         run: |
@@ -24,8 +23,8 @@ jobs:
           mkdir input
 
       - name: Compile Java Files
-        # 🔥 Fixed: Pathing for your structure
-        run: javac -d out -cp "lib/*;src/*" src/*.java
+        # 🔥 ADDED: -encoding utf8 to handle your emojis/special characters
+        run: javac -encoding utf8 -d out -cp "lib/*;src/*" src/*.java
 
       - name: Create Main JAR
         run: jar --create --file=input/FinanceBuddy.jar --main-class=FinanceBuddy -C out .
