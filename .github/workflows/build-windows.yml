@@ -23,18 +23,34 @@ jobs:
           mkdir input
 
       - name: Compile Java Files
-        # 🔥 Updated to look in dist/lib
         run: javac -encoding utf8 -d out -cp "dist/lib/*;src/*" src/*.java
 
       - name: Create Main JAR
-        run: jar --create --file=input/FinanceBuddy.jar --main-class=FinanceBuddy -C out .
+        # We add the Class-Path to the manifest so it looks for jars in the same folder
+        run: |
+          echo "Class-Path: sqlite-jdbc-3.45.2.0.jar slf4j-api-2.0.12.jar slf4j-simple-2.0.12.jar" > manifest.txt
+          jar --create --file=input/FinanceBuddy.jar --main-class=FinanceBuddy --manifest=manifest.txt -C out .
 
       - name: Copy Libraries to Input
-        # 🔥 Updated to copy from dist/lib so the EXE includes the driver
         run: copy dist\lib\*.jar input\
 
       - name: Run jpackage
         run: |
+          jpackage `
+            --name "FinanceBuddy" `
+            --vendor "Richie" `
+            --input input `
+            --main-jar FinanceBuddy.jar `
+            --main-class FinanceBuddy `
+            --type exe `
+            --win-shortcut `
+            --win-menu
+            
+      - name: Upload Installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: FinanceBuddy-Windows-Installer
+          path: "*.exe"        run: |
           jpackage `
             --name "FinanceBuddy" `
             --vendor "Richie" `
