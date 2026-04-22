@@ -8,15 +8,17 @@ public class DatabaseHelper {
     // 🔥 NEW: Path to the local SQLite database file
     private static final String DB_URL = "jdbc:sqlite:financebuddy.db";
 
-    public static Connection connect() throws SQLException {
-        try {
-            // Updated for SQLite
-            Class.forName("org.sqlite.JDBC");
-        } catch (ClassNotFoundException e) {
-            System.out.println("SQLite Driver not found: " + e.getMessage());
-        }
-        return DriverManager.getConnection(DB_URL);
+   public static Connection connect() throws SQLException {
+    try {
+        // 🔥 THIS IS THE MISSING PART: It manually loads the SQLite engine
+        Class.forName("org.sqlite.JDBC");
+    } catch (ClassNotFoundException e) {
+        System.out.println("SQLite Driver not found: " + e.getMessage());
     }
+    
+    // Ensure this string matches exactly
+    return DriverManager.getConnection("jdbc:sqlite:financebuddy.db");
+}
 
     public static void initDatabase() {
         // SQL Syntax remains the same for CREATE TABLE
