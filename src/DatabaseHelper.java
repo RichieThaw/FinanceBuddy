@@ -1,24 +1,28 @@
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class DatabaseHelper {
     
-    // 🔥 NEW: Path to the local SQLite database file
-    private static final String DB_URL = "jdbc:sqlite:financebuddy.db";
+    // 🔥 This finds the "User" folder (e.g., C:\Users\Richie)
+    private static final String USER_HOME = System.getProperty("user.home");
+    // 🔥 This creates the database path inside that folder
+    private static final String DB_PATH = USER_HOME + File.separator + "financebuddy.db";
+    private static final String DB_URL = "jdbc:sqlite:" + DB_PATH;
 
-   public static Connection connect() throws SQLException {
-    try {
-        // 🔥 THIS IS THE MISSING PART: It manually loads the SQLite engine
-        Class.forName("org.sqlite.JDBC");
-    } catch (ClassNotFoundException e) {
-        System.out.println("SQLite Driver not found: " + e.getMessage());
+    public static Connection connect() throws SQLException {
+        try {
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
+            System.err.println("Driver not found: " + e.getMessage());
+        }
+        
+        // This will now create the file in a safe place like C:\Users\Name\financebuddy.db
+        return DriverManager.getConnection(DB_URL);
     }
     
-    // Ensure this string matches exactly
-    return DriverManager.getConnection("jdbc:sqlite:financebuddy.db");
-}
+    // ... rest of your code (initDatabase, etc.)
 
     public static void initDatabase() {
         // SQL Syntax remains the same for CREATE TABLE
