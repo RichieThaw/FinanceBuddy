@@ -1,4 +1,3 @@
-package src; // Or your specific package name
 
 import java.io.File;
 import java.sql.Connection;
