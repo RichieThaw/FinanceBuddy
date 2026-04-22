@@ -23,14 +23,15 @@ jobs:
           mkdir input
 
       - name: Compile Java Files
-        run: javac -encoding utf8 -d out -cp "lib/*;src/*" src/*.java
+        # 🔥 Updated to look in dist/lib
+        run: javac -encoding utf8 -d out -cp "dist/lib/*;src/*" src/*.java
 
       - name: Create Main JAR
         run: jar --create --file=input/FinanceBuddy.jar --main-class=FinanceBuddy -C out .
 
       - name: Copy Libraries to Input
-        # 🔥 This step ensures the SQLite driver is placed where jpackage can see it
-        run: copy lib\*.jar input\
+        # 🔥 Updated to copy from dist/lib so the EXE includes the driver
+        run: copy dist\lib\*.jar input\
 
       - name: Run jpackage
         run: |
