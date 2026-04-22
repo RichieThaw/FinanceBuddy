@@ -1,7 +1,11 @@
+package src; // Or your specific package name
+
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement; // 🔥 THIS WAS MISSING
+import java.sql.ResultSet; // Add this too, just in case you use it later
 
 public class DatabaseHelper {
     
